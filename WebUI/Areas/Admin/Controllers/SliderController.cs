@@ -69,6 +69,7 @@ public class SliderController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
+
         var slider = _context.Sliders.FirstOrDefault(x => x.Id == id);
         if(slider == null) return NotFound();
         return View(slider);
