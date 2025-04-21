@@ -30,7 +30,18 @@ public class SliderController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Slider slider, IFormFile file)
     {
-        string fileName = @"\uploads\" + Guid.NewGuid() + file.FileName;
+        if (file == null)
+        {
+            ModelState.AddModelError("error", "Photo is required");
+            return View();
+        }
+
+        if (!ModelState.IsValid)
+            return View();
+
+        
+
+        string fileName = @"/uploads/" + Guid.NewGuid() + file.FileName;
 
         using var stream = new FileStream(_env.WebRootPath + fileName, FileMode.Create);
         await file.CopyToAsync(stream);
@@ -51,17 +62,22 @@ public class SliderController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(Slider slider, IFormFile file)
+    public async Task<IActionResult> Edit(int id, Slider slider, IFormFile file)
     {
-        if(file != null)
+
+        var sliderDb = _context.Sliders.FirstOrDefault(x => x.Id == id);
+
+        if (file != null)
         {
-            string fileName = @"\uploads\" + Guid.NewGuid() + file.FileName;
+            string fileName = @"/uploads/" + Guid.NewGuid() + file.FileName;
 
             using var stream = new FileStream(_env.WebRootPath + fileName, FileMode.Create);
             await file.CopyToAsync(stream);
-            slider.PhotoUrl = fileName;
+            sliderDb.PhotoUrl = fileName;
         }
-        _context.Sliders.Update(slider);
+
+        sliderDb.SubTitle = slider.SubTitle;
+        sliderDb.Title = slider.Title;
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
