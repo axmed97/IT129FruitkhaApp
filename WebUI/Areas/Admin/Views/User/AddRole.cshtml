@@ -1,0 +1,15 @@
+﻿@using WebUI.Areas.Admin.ViewModels
+@model UserRoleVM
+
+<form method="post">
+    <h6>@Model.AppUser.FirstName @Model.AppUser.LastName</h6>
+
+    <select name="role" class="form-control">
+        @foreach (var item in Model.Roles)
+        {
+            <option value="@item">@item</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-dark">Create</button>
+</form>

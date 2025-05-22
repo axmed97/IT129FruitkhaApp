@@ -1,0 +1,44 @@
+﻿@model List<Product>
+
+<a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn btn-dark">Create</a>
+<table id="proTable" class="table table-dark table-bordered table-hovered table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Img</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Category.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Discount</td>
+                <td>
+                    <img src="@item.PhotoUrl" width="200" alt="" />
+                </td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Edit"
+                       asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <form method="post" asp-action="Delete" asp-route-id="@item.Id">
+                        <button onclick="return confirm('Are you sure to delete this product:@item.Name')" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        let table = new DataTable('#proTable');
+    </script>
+}

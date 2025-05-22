@@ -1,15 +1,28 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebUI.Data;
+using WebUI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();    
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddDefaultIdentity<AppUser>().AddRoles<IdentityRole>()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<AppDbContext>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.LoginPath = "/Auth/Login";
+    option.AccessDeniedPath = "/Auth/Login";
+});
 
 var app = builder.Build();
 
@@ -22,8 +35,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

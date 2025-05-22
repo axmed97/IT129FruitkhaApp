@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebUI.Data;
 using WebUI.Models;
 
 namespace WebUI.Areas.Admin.Controllers;
 [Area(nameof(Admin))]
+[Authorize(Roles = "Admin, Moderator")]
+
 public class CategoryController : Controller
 {
     private readonly AppDbContext _context;
@@ -18,7 +21,6 @@ public class CategoryController : Controller
         var categories = _context.Categories.ToList();
         return View(categories);
     }
-
     public IActionResult Create()
     {
         return View();

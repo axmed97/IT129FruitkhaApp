@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUI.Data;
 using WebUI.Models;
 // CRUD - Create, Read, Update, Delete
 namespace WebUI.Areas.Admin.Controllers;
 [Area(nameof(Admin))]
+[Authorize(Roles = "Admin, Moderator")]
+
 public class SliderController : Controller
 {
     private readonly AppDbContext _context;
@@ -17,7 +20,9 @@ public class SliderController : Controller
 
     public IActionResult Index()
     {
-        var sliders = _context.Sliders.ToList();
+        var x = _context.Products.AsQueryable();
+
+        var sliders = _context.Sliders.ToList().Where(x => x.Id > 5);
         return View(sliders);
     }
 

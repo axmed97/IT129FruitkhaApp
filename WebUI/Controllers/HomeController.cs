@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Data;
 using WebUI.Models;
+using WebUI.ViewModels;
 
 namespace WebUI.Controllers
 {
@@ -19,7 +20,13 @@ namespace WebUI.Controllers
         public IActionResult Index()
         {
             var sliders = _context.Sliders.ToList();
-            return View(sliders);
+            var products = _context.Products.OrderByDescending(x => x.Id).Take(3).ToList();
+            HomeVM homeVM = new()
+            {
+                Sliders = sliders,
+                Products = products,
+            };
+            return View(homeVM);
         }
 
         public IActionResult Privacy()
